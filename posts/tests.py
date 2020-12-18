@@ -29,12 +29,12 @@ class PostAPIReadTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
         self.assertEqual(response.data[0]['title'], 'Test title 0')
-        self.assertEqual(response.data[0]['user'], 1)
+        self.assertEqual(response.data[0]['userId'], '1')
 
     def test_retrieve_post(self):
         url = reverse('post-detail', kwargs={'pk':1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Test title 0')
-        self.assertEqual(response.data['user'], 1)
+        self.assertEqual(response.data['userId'], '1')
 
