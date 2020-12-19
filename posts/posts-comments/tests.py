@@ -36,7 +36,6 @@ class PostsCommentsAPIReadTests(APITestCase):
                     comment_test = Comment(**comment_data)
                     comment_test.save()
                 
-
     def test_post_comments_list(self):
         url = reverse('post-comments-list')
         response = self.client.get(url)
