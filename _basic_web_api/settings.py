@@ -1,4 +1,8 @@
 from pathlib import Path
+import environ
+import os
+
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -11,7 +15,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = 'at*ya)gwlvkj5@@_o$))7)3i!!@4b$=)rf-f^)by3kar5u477*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = eval(env.get_value("DEBUG", default="False"))
 
 ALLOWED_HOSTS = []
 
@@ -63,16 +67,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = '_basic_web_api.wsgi.application'
 
+APPEND_SLASH = True
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASES = dict()
+try:
+    DATABASE_URL = env.db('DATABASE_URL')
+    DATABASES['default'] = DATABASE_URL
+except:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env.get_value("POSTGRES_DB", default="postgres"),
+            'USER': env.get_value("POSTGRES_USER", default="postgres"),
+            'PASSWORD': env.get_value("POSTGRES_PASSWORD", default="postgres"),
+            'HOST': env.get_value("POSTGRES_HOST", default="localhost"),
+            'PORT': env.get_value("POSTGRES_PORT", default="5432"),
+        }
     }
-}
 
 
 # Password validation
@@ -112,6 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 REST_FRAMEWORK = {
