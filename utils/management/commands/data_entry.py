@@ -21,7 +21,7 @@ class Command(BaseCommand):
             save_posts(posts)
             self.stdout.write(f"{len(posts)} profiles salvos com sucesso!")
 
-            self.stdout.write("Salvando dados de comments")
+            self.stdout.write("Salvando dados de Comments")
             save_comments(comments)
             self.stdout.write(f"{len(comments)} profiles salvos com sucesso!")
         
