@@ -8,5 +8,5 @@ urlpatterns = [
     path('comments/', include('comments.urls')),
     path('profile-posts/', include('profiles.profiles-posts.urls')),
     path('posts-comments/', include('posts.posts-comments.urls')),
-    path('api-root', include('api_root.urls')),
+    path('api-root/', include('api_root.urls')),
 ]
