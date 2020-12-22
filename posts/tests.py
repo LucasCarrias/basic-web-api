@@ -58,11 +58,10 @@ class PostAPIReadTests(APITestCase):
         self.assertEqual(response.data[0]['name'], 'Test name 1')
 
     def test_post_detail_comment_detail(self):
-        url = reverse('post-detail-comment-detail', kwargs={'post_pk':1, 'pk':1})
+        url = reverse('post-detail-comment-detail', kwargs={'post_pk':1, 'pk':2})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 5)
-        self.assertEqual(response.data['name'], 'Test name 1')
+        self.assertEqual(response.data['name'], 'Test name 2')
 
 
 class PostCommentAPICRUDTests(APITestCase):
@@ -96,8 +95,7 @@ class PostCommentAPICRUDTests(APITestCase):
         data = {
             'name': 'Test name',
             'email': 'test@test.com',
-            'body': 'Test body',
-            'postId': 1
+            'body': 'Test body'
         }
         url = reverse('post-detail-comment-list', kwargs={'pk':1})
         response = self.client.post(url, data=data)

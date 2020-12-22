@@ -1,30 +1,40 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from .models import Post
 from comments.models import Comment
-from .serializers import PostSerializer
-from comments.serializers import CommentSerializer
+from .serializers import PostSerializer, PostDetailCommentSerializer
 from rest_framework.response import Response
+from rest_framework import status
 
-
-class PostListView(ListAPIView):
+class PostListView(ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-class PostDetailView(RetrieveAPIView):
+class PostDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 class PostDetailCommentListView(ListCreateAPIView):
     queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+    serializer_class = PostDetailCommentSerializer
 
     def get_queryset(self):
         post_id = self.kwargs.get('pk')
         return super().get_queryset().filter(post_id=post_id)
 
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        data['postId'] = self.kwargs.get('pk')
+        
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 class PostDetailCommentCRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+    serializer_class = PostDetailCommentSerializer
 
     def get_queryset(self):
         post_id = self.kwargs.get('post_pk')

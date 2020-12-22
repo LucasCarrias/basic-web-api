@@ -14,8 +14,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x wait-for-database.sh
-
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN python manage.py collectstatic -c --no-input
